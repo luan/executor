@@ -36,7 +36,7 @@ var _ = Describe("Checker", func() {
 		logger = lagertest.NewTestLogger("test")
 		gardenClient = &gardenfakes.FakeClient{}
 		guidGenerator := &fakeguidgen.FakeGenerator{}
-		guidGenerator.GuidReturns("abc-123")
+		guidGenerator.GuidReturns("executor-healthcheck-abc-123")
 		gardenChecker = gardenhealth.NewChecker(rootfsPath, containerOwnerName, 0, healthcheckSpec, gardenClient, guidGenerator)
 	})
 

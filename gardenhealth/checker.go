@@ -129,7 +129,7 @@ func (c *checker) create(logger lager.Logger) (string, garden.Container, error) 
 	logger.Debug("starting")
 	defer logger.Debug("finished")
 
-	guid := HealthcheckPrefix + c.guidGenerator.Guid(logger)
+	guid := c.guidGenerator.Guid(logger, HealthcheckPrefix)
 	var container garden.Container
 	err := retryOnFail(c.retryInterval, func(attempt uint) (createErr error) {
 		container, createErr = c.gardenClient.Create(garden.ContainerSpec{
