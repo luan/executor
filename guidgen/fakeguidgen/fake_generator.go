@@ -9,10 +9,11 @@ import (
 )
 
 type FakeGenerator struct {
-	GuidStub        func(lager.Logger) string
+	GuidStub        func(lager.Logger, string) string
 	guidMutex       sync.RWMutex
 	guidArgsForCall []struct {
 		arg1 lager.Logger
+		arg2 string
 	}
 	guidReturns struct {
 		result1 string
@@ -21,15 +22,16 @@ type FakeGenerator struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeGenerator) Guid(arg1 lager.Logger) string {
+func (fake *FakeGenerator) Guid(arg1 lager.Logger, arg2 string) string {
 	fake.guidMutex.Lock()
 	fake.guidArgsForCall = append(fake.guidArgsForCall, struct {
 		arg1 lager.Logger
-	}{arg1})
-	fake.recordInvocation("Guid", []interface{}{arg1})
+		arg2 string
+	}{arg1, arg2})
+	fake.recordInvocation("Guid", []interface{}{arg1, arg2})
 	fake.guidMutex.Unlock()
 	if fake.GuidStub != nil {
-		return fake.GuidStub(arg1)
+		return fake.GuidStub(arg1, arg2)
 	} else {
 		return fake.guidReturns.result1
 	}
@@ -41,10 +43,10 @@ func (fake *FakeGenerator) GuidCallCount() int {
 	return len(fake.guidArgsForCall)
 }
 
-func (fake *FakeGenerator) GuidArgsForCall(i int) lager.Logger {
+func (fake *FakeGenerator) GuidArgsForCall(i int) (lager.Logger, string) {
 	fake.guidMutex.RLock()
 	defer fake.guidMutex.RUnlock()
-	return fake.guidArgsForCall[i].arg1
+	return fake.guidArgsForCall[i].arg1, fake.guidArgsForCall[i].arg2
 }
 
 func (fake *FakeGenerator) GuidReturns(result1 string) {

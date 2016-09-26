@@ -10,15 +10,15 @@ var DefaultGenerator Generator = &generator{}
 //go:generate counterfeiter -o fakeguidgen/fake_generator.go . Generator
 
 type Generator interface {
-	Guid(lager.Logger) string
+	Guid(lager.Logger, string) string
 }
 
 type generator struct{}
 
-func (*generator) Guid(logger lager.Logger) string {
+func (*generator) Guid(logger lager.Logger, prefix string) string {
 	guid, err := uuid.NewV4()
 	if err != nil {
 		logger.Fatal("failed-to-generate-guid", err)
 	}
-	return guid.String()
+	return prefix + guid.String()
 }
